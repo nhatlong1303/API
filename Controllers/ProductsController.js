@@ -46,7 +46,7 @@ module.exports = {
         }
 
     },
-    categoryLevel1: (req, res) => {
+    categoryLevel: (req, res) => {
         if (Author(req)) {
             let params = req.body;
             let sql = 'SELECT * FROM products WHERE ?'
@@ -129,8 +129,8 @@ module.exports = {
     },
     delete: (req, res) => {
         if (Author(req)) {
-            let sql = 'DELETE FROM products WHERE ?'
-            db.query(sql, [req.body], (err, response) => {
+            let sql = 'DELETE FROM products WHERE id=?'
+            db.query(sql, [req.body.id], (err, response) => {
                 if (err !== null) {
                     res.json({
                         err

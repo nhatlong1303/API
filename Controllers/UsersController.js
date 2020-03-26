@@ -96,34 +96,23 @@ module.exports = {
     },
     insert: (req, res) => {
         if (Author(req)) {
-            let data = [[req.body.name, req.body.password]];
-            let name='';
-            let pw='';
-            if(req.body.name!=''){
-                name='name';
-            }
-            if(req.body.name!=''){
-                pw='password';
-            }
-            console.log(name,pw)
-            let sql = 'INSERT INTO user * VALUES  ?'
-            db.query(sql, [[[name,pw]],data], (err, response) => {
-                res.json({
-                    err
-                })
-                // if (response == ''||response == undefined) {
-                //     res.json({
-                //         success: false,
-                //         message: 'insert failed!',
-                //         code: 500,
-                //     })
-                // } else {
-                //     res.json({
-                //         success: true,
-                //         message: 'Insert success!',
-                //         code: 200,
-                //     })
-                // }
+            let data = [[req.body.name != null ? req.body.name : '', req.body.email != null ? req.body.email : '', req.body.password]];
+            let sql = 'INSERT INTO users (name,email,password) VALUES  ?'
+            db.query(sql, [data], (err, response) => {
+                if (response == '' || response == undefined) {
+                    res.json({
+                        success: false,
+                        message: err.sqlMessage,
+                        code: 500,
+                    })
+                } else {
+                    res.json({
+                        success: true,
+                        message: 'Insert success!',
+                        code: 200,
+                    })
+                }
+
             })
         } else {
             resultFaled(res)
@@ -131,11 +120,11 @@ module.exports = {
     },
     delete: (req, res) => {
         if (Author(req)) {
-            let sql = 'DELETE FROM users WHERE ?'
-            db.query(sql, [req.body], (err, response) => {
+            let sql = 'DELETE FROM users WHERE id=?'
+            db.query(sql, [req.body.id], (err, response) => {
                 if (err !== null) {
                     res.json({
-                        err
+                        message: err.sqlMessage,
                     })
                 } else {
                     res.json({
