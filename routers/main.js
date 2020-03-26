@@ -1,18 +1,21 @@
 //quản lý các link API
 
 'use strict';
+
 module.exports = function (app) {
     let UsersCtrl = require('../Controllers/UsersController');
-
     // todoList Routes
-    app.route('/user').post(UsersCtrl.post);
-    app.route('/user/add').post(UsersCtrl.insert);
-    app.route('/user/detail').post(UsersCtrl.detail);
-    app.route('/user/update').post(UsersCtrl.update)
-    app.route('/user/delete').post(UsersCtrl.delete)
+    app.route('/users').post(UsersCtrl.post);
+    app.route('/users/add').post(UsersCtrl.insert);
+    app.route('/users/detail').post(UsersCtrl.detail);
+    app.route('/users/update').post(UsersCtrl.update)
+    app.route('/users/delete').post(UsersCtrl.delete)
 
     let AuthCtrl = require('../Controllers/AuthController');
     app.route('/signIn').post(AuthCtrl.signIn);
     app.route('/signUp').post(AuthCtrl.signUp);
 
+    let ProductsCtrl = require('../Controllers/ProductsController');
+    app.route('/products').post(ProductsCtrl.all);
+    app.route('/products/update').post(ProductsCtrl.update);
 };

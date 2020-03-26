@@ -3,15 +3,18 @@ var jwt = require('jsonwebtoken');
 var atob = require('atob');
 var Cryptr = require('cryptr'),
     cryptr = new Cryptr('myTotalySecretKey');
+
+var LocalStorage = require('node-localstorage').LocalStorage,
+    localStorage = new LocalStorage('./scratch');
 module.exports = {
     signUp: (req, res) => {
-        var userName = req.body.userName;
+        var name = req.body.name;
         var password = req.body.password;
         // var dec_pass = atob(password);
         // var encrypted_pass = cryptr.encrypt(dec_pass);
-        let data = [[userName, password]];
+        let data = [[name, password]];
 
-        let sql = 'INSERT INTO user (userName,password) VALUES  ?'
+        let sql = 'INSERT INTO user (name,password) VALUES  ?'
         db.query(sql, [data], (err, response) => {
             if (err !== null) {
                 res.json({
@@ -27,16 +30,18 @@ module.exports = {
         })
     },
     signIn: (req, res) => {
-        var userName = req.body.userName;
+        var name = req.body.name;
         var password = req.body.password;
         // var dec_pass =atob(password);
         // var encrypted_pass = cryptr.decrypt(dec_pass);
-        let sql = 'SELECT * FROM user WHERE  userName=? AND password=?'
-        db.query(sql, [[userName], [password]], (err, response) => {
-            console.log(response)
-            if (err !== null) {
+        let sql = 'SELECT * FROM users WHERE  name=? AND password=?'
+        db.query(sql, [[name], [password]], (err, response) => {
+            if (response == "") {
                 res.json({
-                    err
+                    success: false,
+                    message: 'Incorrect email/password!',
+                    code: 200,
+                    data: [],
                 })
             } else {
                 var data = JSON.stringify(response);
@@ -53,31 +58,32 @@ module.exports = {
                     audience: 'TEST',
                     data: data
                 };
-                jwt.sign(payload, secret, { algorithm: 'HS256', expiresIn : expiresIn}, function(err, token) {
-                    if(err){
+                jwt.sign(payload, secret, { algorithm: 'HS256', expiresIn: expiresIn }, function (err, token) {
+                    if (err) {
                         console.log('Error occurred while generating token');
                         console.log(err);
                         return false;
                     }
-                     else{
-                    if(token != false){
-                        //res.send(token);
-                        res.header();
-                        res.json({
-                            success: true,
-                            message: 'signIn success!',
-                            code: 200,
-                            data : response,
-                            token : token,
-                        })
-                        res.end();
+                    else {
+                        if (token != false) {
+                            // res.send(token);
+                            localStorage.setItem('Token', token);
+                            res.header();
+                            res.json({
+                                success: true,
+                                message: 'signIn success!',
+                                code: 200,
+                                data: response,
+                                token: token,
+                            })
+                            res.end();
+                        }
+                        else {
+                            res.send("Could not create token");
+                            res.end();
+                        }
+
                     }
-                    else{
-                        res.send("Could not create token");
-                        res.end();
-                    }
-                    
-                     }
                 });
             }
         })

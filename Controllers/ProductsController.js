@@ -21,9 +21,9 @@ function resultFaled(res) {
     )
 }
 module.exports = {
-    post: (req, res) => {
+    all: (req, res) => {
         if (Author(req)) {
-            let sql = 'SELECT * FROM users'
+            let sql = 'SELECT * FROM products'
             db.query(sql, (err, response) => {
                 if (err !== null) {
                     res.json({
@@ -35,7 +35,7 @@ module.exports = {
                         message: 'Access success!',
                         code: 200,
                         data: {
-                            users: response
+                            products: response
                         }
                     })
                 }
@@ -46,10 +46,10 @@ module.exports = {
         }
 
     },
-    detail: (req, res) => {
+    categoryLevel1: (req, res) => {
         if (Author(req)) {
             let params = req.body;
-            let sql = 'SELECT * FROM users WHERE ?'
+            let sql = 'SELECT * FROM products WHERE ?'
             db.query(sql, [params], (err, response) => {
                 if (err !== null) {
                     res.json({
@@ -61,7 +61,7 @@ module.exports = {
                         message: 'Access success!',
                         code: 200,
                         data: {
-                            user: response[0]
+                            products: response
                         }
                     })
                 }
@@ -73,7 +73,7 @@ module.exports = {
     update: (req, res) => {
         if (Author(req)) {
             let id = req.body.id;
-            let sql = 'UPDATE users SET ?  WHERE id = ?'
+            let sql = 'UPDATE products SET ?  WHERE id = ?'
             db.query(sql, [req.body, id], (err, response) => {
                 console.log(response)
                 if (response.message == '') {
@@ -106,24 +106,22 @@ module.exports = {
                 pw='password';
             }
             console.log(name,pw)
-            let sql = 'INSERT INTO user * VALUES  ?'
+            let sql = 'INSERT INTO user ? VALUES  ?'
             db.query(sql, [[[name,pw]],data], (err, response) => {
-                res.json({
-                    err
-                })
-                // if (response == ''||response == undefined) {
-                //     res.json({
-                //         success: false,
-                //         message: 'insert failed!',
-                //         code: 500,
-                //     })
-                // } else {
-                //     res.json({
-                //         success: true,
-                //         message: 'Insert success!',
-                //         code: 200,
-                //     })
-                // }
+                console.log(response)
+                if (response == ''||response == undefined) {
+                    res.json({
+                        success: false,
+                        message: 'insert failed!',
+                        code: 500,
+                    })
+                } else {
+                    res.json({
+                        success: true,
+                        message: 'Insert success!',
+                        code: 200,
+                    })
+                }
             })
         } else {
             resultFaled(res)
@@ -131,7 +129,7 @@ module.exports = {
     },
     delete: (req, res) => {
         if (Author(req)) {
-            let sql = 'DELETE FROM users WHERE ?'
+            let sql = 'DELETE FROM products WHERE ?'
             db.query(sql, [req.body], (err, response) => {
                 if (err !== null) {
                     res.json({
