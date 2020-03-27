@@ -40,7 +40,7 @@ module.exports = {
                 res.json({
                     success: false,
                     message: 'Incorrect email/password!',
-                    code: 200,
+                    code: 500,
                     data: [],
                 })
             } else {
@@ -67,14 +67,18 @@ module.exports = {
                     else {
                         if (token != false) {
                             // res.send(token);
-                            localStorage.setItem('Token', token);
+                            // localStorage.setItem('Token', token);
+                            localStorage.setItem('Token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1ODUyODI1NTYsImp3dGlkIjoiZXJ5NzVtIiwiYXVkaWVuY2UiOiJURVNUIiwiZGF0YSI6Ilt7XCJpZFwiOjIyLFwibmFtZVwiOlwiYWRtaW5cIixcImVtYWlsXCI6XCJcIixcInBhc3N3b3JkXCI6XCIxMjNcIixcInJlbWVtYmVyX3Rva2VuXCI6bnVsbCxcImNyZWF0ZWRfYXRcIjpudWxsLFwidXBkYXRlZF9hdFwiOm51bGx9XSIsImV4cCI6MTU4NTI4NjE1Nn0.AoQDzIvL-SB7mcEio-SrNjObMRMWZXg4sZJnS-dF0LE');
                             res.header();
                             res.json({
                                 success: true,
                                 message: 'signIn success!',
                                 code: 200,
-                                data: response,
-                                token: token,
+                                data: {
+                                    user:response[0]
+                                },
+                                // token:token
+                                token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1ODUyODI1NTYsImp3dGlkIjoiZXJ5NzVtIiwiYXVkaWVuY2UiOiJURVNUIiwiZGF0YSI6Ilt7XCJpZFwiOjIyLFwibmFtZVwiOlwiYWRtaW5cIixcImVtYWlsXCI6XCJcIixcInBhc3N3b3JkXCI6XCIxMjNcIixcInJlbWVtYmVyX3Rva2VuXCI6bnVsbCxcImNyZWF0ZWRfYXRcIjpudWxsLFwidXBkYXRlZF9hdFwiOm51bGx9XSIsImV4cCI6MTU4NTI4NjE1Nn0.AoQDzIvL-SB7mcEio-SrNjObMRMWZXg4sZJnS-dF0LE',
                             })
                             res.end();
                         }

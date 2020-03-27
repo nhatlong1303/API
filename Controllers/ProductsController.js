@@ -48,9 +48,10 @@ module.exports = {
     },
     categoryLevel: (req, res) => {
         if (Author(req)) {
-            let params = req.body;
-            let sql = 'SELECT * FROM products WHERE ?'
-            db.query(sql, [params], (err, response) => {
+            let params = req.body.id;
+            console.log(params)
+            let sql = 'SELECT * FROM category INNER JOIN products on products.Level1=category.id or  products.Level2=category.id or  products.Level3=category.id WHERE category.id=? or category.categoryParent=?'
+            db.query(sql, [params,params], (err, response) => {
                 if (err !== null) {
                     res.json({
                         message: err.sqlMessage
@@ -61,7 +62,8 @@ module.exports = {
                         message: 'Access success!',
                         code: 200,
                         data: {
-                            products: response
+                            products: response,
+                            total:Object.keys(response).length
                         }
                     })
                 }
