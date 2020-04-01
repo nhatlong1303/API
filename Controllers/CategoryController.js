@@ -44,12 +44,11 @@ module.exports = {
         } else {
             resultFaled(res)
         }
-
     },
     All: (req, res) => {
         if (Author(req)) {
-            let sql = 'SELECT * FROM category ?'
-            db.query(sql, [req.body], (err, response) => {
+            let sql = 'SELECT * FROM category '
+            db.query(sql, null, (err, response) => {
                 if (err !== null) {
                     res.json({
                         err

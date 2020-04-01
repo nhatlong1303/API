@@ -3,8 +3,6 @@
 const util = require('util')
 const mysql = require('mysql')
 const db = require('../db')
-var multer = require('multer')
-var upload = multer({ dest: 'uploads/' })
 //response
 var LocalStorage = require('node-localstorage').LocalStorage,
     localStorage = new LocalStorage('./scratch');
@@ -50,10 +48,20 @@ module.exports = {
     },
     categoryLevel: (req, res) => {
         if (Author(req)) {
-            let params = req.body.id;
+            let sql = '';
+            let params = '';
+            if (req.body.Level3 !== undefined) {
+                sql = 'SELECT * FROM category INNER JOIN products on products.Level3=category.id WHERE  category.id=? ';
+                params = req.body.Level3
+            } else if (req.body.Level2 !== undefined) {
+                sql = 'SELECT * FROM category INNER JOIN products on products.Level2=category.id or  products.Level3=category.id WHERE  category.categoryParent=? or category.id=? ';
+                params = req.body.Level2
+            } else {
+                sql = 'SELECT * FROM category INNER JOIN products on  products.Level1=category.id or products.Level2=category.id or  products.Level3=category.id WHERE  category.categoryParent=? '
+                params = req.body.Level1
+            }
             console.log(params)
-            let sql = 'SELECT * FROM category INNER JOIN products on products.Level1=category.id or  products.Level2=category.id or  products.Level3=category.id WHERE category.id=? or category.categoryParent=?'
-            db.query(sql, [params, params], (err, response) => {
+            db.query(sql, [params,params], (err, response) => {
                 if (err !== null) {
                     res.json({
                         message: err.sqlMessage
@@ -100,15 +108,21 @@ module.exports = {
     },
     insert: (req, res) => {
         if (Author(req)) {
-            let data = [[req.body]]
-            let sql = 'INSERT INTO products (image) VALUES  ?'
-            db.query(sql, upload.single('file'), (err, response) => {
-                var imageData = fs.readFileSync(req.file.path);
-                db.profile.create({
-                    profile_pic: imageData
-                })
-            }).then(image => {
-                res.json({ success: true, file1: req.file, data: image, update: false })
+            let data = [[req.body.productName, req.body.description, req.body.image, req.body.quantity, req.body.price, req.body.created_at, req.body.Level1, req.body.Level2, req.body.Level3]]
+            let sql = 'INSERT INTO products (productName,description,image,quantity,price,created_at,Level1,Level2,Level3) VALUES  ?'
+            db.query(sql, [data], (err, response) => {
+                console.log(err)
+                if (err !== null) {
+                    res.json({
+                        err
+                    })
+                } else {
+                    res.json({
+                        success: true,
+                        message: 'insert success!',
+                        code: 200,
+                    })
+                }
             })
         } else {
             resultFaled(res)

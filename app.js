@@ -19,9 +19,30 @@ app.use((req, res, next) => {
 app.use(upload.array());
 app.use(express.static('public'));
 let routes = require('./routers/main') //importing route
-
+const fs = require('fs');
 routes(app)
-
+const uploadImage = async (req, res, next) => {
+ 
+    try {
+ 
+        // to declare some path to store your converted image
+        const path = './uploads/'+Date.now()+'.png'
+ 
+        const imgdata = req.body.base64image;
+ 
+        // to convert base64 format into random filename
+        const base64Data = imgdata.replace(/^data:([A-Za-z-+/]+);base64,/, '');
+        
+        fs.writeFileSync(path, base64Data,  {encoding: 'base64'});
+ 
+        return res.send(path);
+ 
+    } catch (e) {
+        next(e);
+    }
+}
+ 
+app.post('/upload/image', uploadImage)
 app.use((req, res, next) => {
     const error = new Error('Not Found');
     error.status = 404;

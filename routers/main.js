@@ -20,8 +20,11 @@ module.exports = function (app) {
     app.route('/products/category').post(ProductsCtrl.categoryLevel);
     app.route('/products/update').post(ProductsCtrl.update);
     app.route('/products/delete').post(ProductsCtrl.delete);
+    app.route('/products/insert').post(ProductsCtrl.insert);
 
     let CategorysCtrl = require('../Controllers/CategoryController');
     app.route('/category').post(CategorysCtrl.LV0);
     app.route('/categoryAll').post(CategorysCtrl.All);
+
+   
 };
