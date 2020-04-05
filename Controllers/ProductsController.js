@@ -54,14 +54,55 @@ module.exports = {
                 sql = 'SELECT * FROM category INNER JOIN products on products.Level3=category.id WHERE  category.id=? ';
                 params = req.body.Level3
             } else if (req.body.Level2 !== undefined) {
-                sql = 'SELECT * FROM category INNER JOIN products on products.Level2=category.id or  products.Level3=category.id WHERE  category.categoryParent=? or category.id=? ';
-                params = req.body.Level2
+                sql = 'SELECT * FROM category INNER JOIN products on products.Level3=category.id WHERE  category.categoryParent=? ';
+                params = req.body.Level2;
+                console.log('2')
+                db.query(sql, [params], (err, response) => {
+                    if (Object.keys(response).length <= 0) {
+                        console.log('2')
+                        sql = 'SELECT * FROM category INNER JOIN products on products.Level2=category.id WHERE  category.id=? ';
+                        db.query(sql, [params], (err, response) => {
+                            if (err !== null) {
+                                res.json({
+                                    message: err.sqlMessage
+                                })
+                            } else {
+                                res.json({
+                                    success: true,
+                                    message: 'Access success!',
+                                    code: 200,
+                                    data: {
+                                        products: response,
+                                        total: Object.keys(response).length
+                                    }
+                                })
+                            }
+                        })
+                    } else {
+                        if (err !== null) {
+                            res.json({
+                                message: err.sqlMessage
+                            })
+                        } else {
+                            res.json({
+                                success: true,
+                                message: 'Access success!',
+                                code: 200,
+                                data: {
+                                    products: response,
+                                    total: Object.keys(response).length
+                                }
+                            })
+                        }
+                    }
+
+                })
+                return;
             } else {
                 sql = 'SELECT * FROM category INNER JOIN products on  products.Level1=category.id or products.Level2=category.id or  products.Level3=category.id WHERE  category.categoryParent=? '
                 params = req.body.Level1
             }
-            console.log(params)
-            db.query(sql, [params,params], (err, response) => {
+            db.query(sql, [params, params], (err, response) => {
                 if (err !== null) {
                     res.json({
                         message: err.sqlMessage
@@ -85,9 +126,8 @@ module.exports = {
     update: (req, res) => {
         if (Author(req)) {
             let id = req.body.id;
-            let sql = 'UPDATE products SET ?  WHERE id = ?'
-            db.query(sql, [req.body, id], (err, response) => {
-                console.log(response)
+            let sql = 'UPDATE products SET productName=? , description=?,image=?,quantity=?,price=?,updated_at=?  WHERE id = ?'
+            db.query(sql, [req.body.productName,req.body.description,req.body.image,req.body.quantity,req.body.price,req.body.updated_at, id], (err, response) => {
                 if (response.message == '') {
                     res.json({
                         success: false,
