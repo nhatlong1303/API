@@ -70,105 +70,72 @@ module.exports = {
         }
 
     },
-    // categoryLevel: (req, res) => {
-    //     if (Author(req)) {
-    //         let params = req.body;
-    //         let sql = 'SELECT * FROM products WHERE ?'
-    //         db.query(sql, [params], (err, response) => {
-    //             if (err !== null) {
-    //                 res.json({
-    //                     message: err.sqlMessage
-    //                 })
-    //             } else {
-    //                 res.json({
-    //                     success: true,
-    //                     message: 'Access success!',
-    //                     code: 200,
-    //                     data: {
-    //                         products: response
-    //                     }
-    //                 })
-    //             }
-    //         })
-    //     } else {
-    //         resultFaled(res)
-    //     }
-    // },
-    // update: (req, res) => {
-    //     if (Author(req)) {
-    //         let id = req.body.id;
-    //         let sql = 'UPDATE products SET ?  WHERE id = ?'
-    //         db.query(sql, [req.body, id], (err, response) => {
-    //             console.log(response)
-    //             if (response.message == '') {
-    //                 res.json({
-    //                     success: false,
-    //                     message: 'Update failed!',
-    //                     code: 500,
-    //                 })
-    //             } else {
-    //                 res.json({
-    //                     success: true,
-    //                     message: 'Update success!',
-    //                     code: 200,
-    //                 })
-    //             }
-    //         })
-    //     } else {
-    //         resultFaled(res)
-    //     }
-    // },
-    // insert: (req, res) => {
-    //     if (Author(req)) {
-    //         let data = [[req.body.name, req.body.password]];
-    //         let name='';
-    //         let pw='';
-    //         if(req.body.name!=''){
-    //             name='name';
-    //         }
-    //         if(req.body.name!=''){
-    //             pw='password';
-    //         }
-    //         console.log(name,pw)
-    //         let sql = 'INSERT INTO user ? VALUES  ?'
-    //         db.query(sql, [[[name,pw]],data], (err, response) => {
-    //             console.log(response)
-    //             if (response == ''||response == undefined) {
-    //                 res.json({
-    //                     success: false,
-    //                     message: 'insert failed!',
-    //                     code: 500,
-    //                 })
-    //             } else {
-    //                 res.json({
-    //                     success: true,
-    //                     message: 'Insert success!',
-    //                     code: 200,
-    //                 })
-    //             }
-    //         })
-    //     } else {
-    //         resultFaled(res)
-    //     }
-    // },
-    // delete: (req, res) => {
-    //     if (Author(req)) {
-    //         let sql = 'DELETE FROM products WHERE id=?'
-    //         db.query(sql, [req.body.id], (err, response) => {
-    //             if (err !== null) {
-    //                 res.json({
-    //                     err
-    //                 })
-    //             } else {
-    //                 res.json({
-    //                     success: true,
-    //                     message: 'Delete success!',
-    //                     code: 200,
-    //                 })
-    //             }
-    //         })
-    //     } else {
-    //         resultFaled(res)
-    //     }
-    // }
+    update: (req, res) => {
+        if (Author(req)) {
+            let id = req.body.id;
+            let sql = 'UPDATE category SET categoryName=?, nameDev=?,updated_at=?, categoryParent=? WHERE id = ?'
+            db.query(sql, [req.body.categoryName, req.body.nameDev, req.body.updated_at, req.body.categoryParent, id], (err, response) => {
+                console.log(response)
+                if (response.message == '') {
+                    res.json({
+                        success: false,
+                        message: 'Update failed!',
+                        code: 500,
+                    })
+                } else {
+                    res.json({
+                        success: true,
+                        message: 'Update success!',
+                        code: 200,
+                    })
+                }
+            })
+        } else {
+            resultFaled(res)
+        }
+    },
+    insert: (req, res) => {
+        if (Author(req)) {
+            let data = [[req.body.categoryName, req.body.nameDev, req.body.created_at, req.body.categoryParent]]
+            let sql = 'INSERT INTO category (categoryName,nameDev,created_at,categoryParent) VALUES  ?'
+            db.query(sql, [data], (err, response) => {
+                console.log(response)
+                if (response == '' || response == undefined) {
+                    res.json({
+                        success: false,
+                        message: 'insert failed!',
+                        code: 500,
+                    })
+                } else {
+                    res.json({
+                        success: true,
+                        message: 'Insert success!',
+                        code: 200,
+                    })
+                }
+            })
+        } else {
+            resultFaled(res)
+        }
+    },
+    delete: (req, res) => {
+        if (Author(req)) {
+            let sql = 'DELETE FROM category WHERE id=?'
+            db.query(sql, [req.body.id], (err, response) => {
+                if (err !== null) {
+                    res.json({
+                        err
+                    })
+                } else {
+                    res.json({
+                        success: true,
+                        message: 'Delete success!',
+                        code: 200,
+                    })
+                }
+            })
+        } else {
+            resultFaled(res)
+        }
+    }
 }

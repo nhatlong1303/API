@@ -126,8 +126,8 @@ module.exports = {
     update: (req, res) => {
         if (Author(req)) {
             let id = req.body.id;
-            let sql = 'UPDATE products SET productName=? , description=?,image=?,quantity=?,price=?,updated_at=?  WHERE id = ?'
-            db.query(sql, [req.body.productName,req.body.description,req.body.image,req.body.quantity,req.body.price,req.body.updated_at, id], (err, response) => {
+            let sql = 'UPDATE products SET productName=? , description=?,image=?,quantity=?,price=?,updated_at=?,discount=?  WHERE id = ?'
+            db.query(sql, [req.body.productName, req.body.description, req.body.image, req.body.quantity, req.body.price, req.body.updated_at, req.body.discount, id], (err, response) => {
                 if (response.message == '') {
                     res.json({
                         success: false,
@@ -148,8 +148,8 @@ module.exports = {
     },
     insert: (req, res) => {
         if (Author(req)) {
-            let data = [[req.body.productName, req.body.description, req.body.image, req.body.quantity, req.body.price, req.body.created_at, req.body.Level1, req.body.Level2, req.body.Level3]]
-            let sql = 'INSERT INTO products (productName,description,image,quantity,price,created_at,Level1,Level2,Level3) VALUES  ?'
+            let data = [[req.body.productName, req.body.description, req.body.image, req.body.quantity, req.body.price, req.body.created_at, req.body.Level1, req.body.Level2, req.body.Level3, req.body.discount]]
+            let sql = 'INSERT INTO products (productName,description,image,quantity,price,created_at,Level1,Level2,Level3,discount) VALUES  ?'
             db.query(sql, [data], (err, response) => {
                 console.log(err)
                 if (err !== null) {
@@ -187,5 +187,72 @@ module.exports = {
         } else {
             resultFaled(res)
         }
-    }
+    },
+    rating: (req, res) => {
+        if (Author(req)) {
+            let data = [[req.body.productID, req.body.userID, req.body.number, req.body.content, req.body.created_at]]
+            let id=[[req.body.productID]]
+            let sql = 'INSERT INTO rating (productID,userID,number,content,created_at) VALUES  ?'
+            db.query(sql, [data], (err, response) => {
+                console.log(err)
+                if (err !== null) {
+                    res.json({
+                        err
+                    })
+                } else {
+                    let sql = 'SELECT SUM(rating.number) / COUNT(rating.productID) as total FROM  products INNER JOIN rating on products.id=rating.productID WHERE products.id=?'
+                    db.query(sql, [id], (err, response) => {
+                        console.log(err)
+                        if (err !== null) {
+                            res.json({
+                                err
+                            })
+                        } else {
+                            let data=[[response[0].total]]
+                            let sql = 'UPDATE products SET rate=? WHERE products.id=?'
+                            db.query(sql, [data,id], (err, response) => {
+                                console.log(err)
+                                if (err !== null) {
+                                    res.json({
+                                        err
+                                    })
+                                } else {
+                                    res.json({
+                                        success: true,
+                                        message: 'rating success!',
+                                        code: 200,
+                                    })
+                                }
+                            })
+                        }
+                    })
+                }
+            })
+        } else {
+            resultFaled(res)
+        }
+    },
+    TotalRate: (req, res) => {
+        if (Author(req)) {
+            let data = [[req.body.productID]]
+            let sql = 'SELECT SUM(rating.number) / COUNT(rating.productID) as total FROM  products INNER JOIN rating on products.id=rating.productID WHERE products.id=?'
+            db.query(sql, [data], (err, response) => {
+                console.log(err)
+                if (err !== null) {
+                    res.json({
+                        err
+                    })
+                } else {
+                    res.json({
+                        success: true,
+                        message: 'Access success!',
+                        code: 200,
+                        data: response[0]
+                    })
+                }
+            })
+        } else {
+            resultFaled(res)
+        }
+    },
 }
