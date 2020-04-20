@@ -8,7 +8,7 @@ var LocalStorage = require('node-localstorage').LocalStorage,
     localStorage = new LocalStorage('./scratch');
 function Author(req) {
     return (
-        'Bearer ' + localStorage.getItem('Token') == req.headers.authorization ? true : false
+        'Bearer ' + localStorage.getItem('Token') == req.headers.authorization  ? true : false
     )
 }
 function resultFaled(res) {
@@ -22,7 +22,7 @@ function resultFaled(res) {
 }
 module.exports = {
     LV0: (req, res) => {
-        if (Author(req)) {
+        // if (Author(req)) {
             let sql = 'SELECT * FROM category WHERE ?'
             db.query(sql, [req.body], (err, response) => {
                 if (err !== null) {
@@ -41,12 +41,12 @@ module.exports = {
                 }
 
             })
-        } else {
-            resultFaled(res)
-        }
+        // } else {
+        //     resultFaled(res)
+        // }
     },
     All: (req, res) => {
-        if (Author(req)) {
+        // if (Author(req)) {
             let sql = 'SELECT * FROM category '
             db.query(sql, null, (err, response) => {
                 if (err !== null) {
@@ -65,13 +65,13 @@ module.exports = {
                 }
 
             })
-        } else {
-            resultFaled(res)
-        }
+        // } else {
+        //     resultFaled(res)
+        // }
 
     },
     update: (req, res) => {
-        if (Author(req)) {
+        // if (Author(req)) {
             let id = req.body.id;
             let sql = 'UPDATE category SET categoryName=?, nameDev=?,updated_at=?, categoryParent=? WHERE id = ?'
             db.query(sql, [req.body.categoryName, req.body.nameDev, req.body.updated_at, req.body.categoryParent, id], (err, response) => {
@@ -90,12 +90,12 @@ module.exports = {
                     })
                 }
             })
-        } else {
-            resultFaled(res)
-        }
+        // } else {
+        //     resultFaled(res)
+        // }
     },
     insert: (req, res) => {
-        if (Author(req)) {
+        // if (Author(req)) {
             let data = [[req.body.categoryName, req.body.nameDev, req.body.created_at, req.body.categoryParent]]
             let sql = 'INSERT INTO category (categoryName,nameDev,created_at,categoryParent) VALUES  ?'
             db.query(sql, [data], (err, response) => {
@@ -114,12 +114,12 @@ module.exports = {
                     })
                 }
             })
-        } else {
-            resultFaled(res)
-        }
+        // } else {
+        //     resultFaled(res)
+        // }
     },
     delete: (req, res) => {
-        if (Author(req)) {
+        // if (Author(req)) {
             let sql = 'DELETE FROM category WHERE id=?'
             db.query(sql, [req.body.id], (err, response) => {
                 if (err !== null) {
@@ -134,8 +134,8 @@ module.exports = {
                     })
                 }
             })
-        } else {
-            resultFaled(res)
-        }
+        // } else {
+        //     resultFaled(res)
+        // }
     }
 }

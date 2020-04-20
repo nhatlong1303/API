@@ -22,7 +22,7 @@ function resultFaled(res) {
 }
 module.exports = {
     all: (req, res) => {
-        if (Author(req)) {
+        // if (Author(req)) {
             let sql = 'SELECT * FROM products'
             db.query(sql, (err, response) => {
                 if (err !== null) {
@@ -41,13 +41,13 @@ module.exports = {
                 }
 
             })
-        } else {
-            resultFaled(res)
-        }
+        // } else {
+        //     resultFaled(res)
+        // }
 
     },
     categoryLevel: (req, res) => {
-        if (Author(req)) {
+        // if (Author(req)) {
             let sql = '';
             let params = '';
             if (req.body.Level3 !== undefined) {
@@ -119,12 +119,12 @@ module.exports = {
                     })
                 }
             })
-        } else {
-            resultFaled(res)
-        }
+        // } else {
+        //     resultFaled(res)
+        // }
     },
     update: (req, res) => {
-        if (Author(req)) {
+        // if (Author(req)) {
             let id = req.body.id;
             let sql = 'UPDATE products SET productName=? , description=?,image=?,quantity=?,price=?,updated_at=?,discount=?  WHERE id = ?'
             db.query(sql, [req.body.productName, req.body.description, req.body.image, req.body.quantity, req.body.price, req.body.updated_at, req.body.discount, id], (err, response) => {
@@ -142,12 +142,12 @@ module.exports = {
                     })
                 }
             })
-        } else {
-            resultFaled(res)
-        }
+        // } else {
+        //     resultFaled(res)
+        // }
     },
     insert: (req, res) => {
-        if (Author(req)) {
+        // if (Author(req)) {
             let data = [[req.body.productName, req.body.description, req.body.image, req.body.quantity, req.body.price, req.body.created_at, req.body.Level1, req.body.Level2, req.body.Level3, req.body.discount]]
             let sql = 'INSERT INTO products (productName,description,image,quantity,price,created_at,Level1,Level2,Level3,discount) VALUES  ?'
             db.query(sql, [data], (err, response) => {
@@ -164,12 +164,12 @@ module.exports = {
                     })
                 }
             })
-        } else {
-            resultFaled(res)
-        }
+        // } else {
+        //     resultFaled(res)
+        // }
     },
     delete: (req, res) => {
-        if (Author(req)) {
+        // if (Author(req)) {
             let sql = 'DELETE FROM products WHERE id=?'
             db.query(sql, [req.body.id], (err, response) => {
                 if (err !== null) {
@@ -184,12 +184,12 @@ module.exports = {
                     })
                 }
             })
-        } else {
-            resultFaled(res)
-        }
+        // } else {
+        //     resultFaled(res)
+        // }
     },
     rating: (req, res) => {
-        if (Author(req)) {
+        // if (Author(req)) {
             let data = [[req.body.productID, req.body.userID, req.body.number, req.body.content, req.body.created_at]]
             let id=[[req.body.productID]]
             let sql = 'INSERT INTO rating (productID,userID,number,content,created_at) VALUES  ?'
@@ -228,12 +228,12 @@ module.exports = {
                     })
                 }
             })
-        } else {
-            resultFaled(res)
-        }
+        // } else {
+        //     resultFaled(res)
+        // }
     },
     TotalRate: (req, res) => {
-        if (Author(req)) {
+        // if (Author(req)) {
             let data = [[req.body.productID]]
             let sql = 'SELECT SUM(rating.number) / COUNT(rating.productID) as total FROM  products INNER JOIN rating on products.id=rating.productID WHERE products.id=?'
             db.query(sql, [data], (err, response) => {
@@ -251,8 +251,8 @@ module.exports = {
                     })
                 }
             })
-        } else {
-            resultFaled(res)
-        }
+        // } else {
+        //     resultFaled(res)
+        // }
     },
 }

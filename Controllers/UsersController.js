@@ -22,7 +22,7 @@ function resultFaled(res) {
 }
 module.exports = {
     post: (req, res) => {
-        if (Author(req)) {
+        // if (Author(req)) {
             let sql = 'SELECT * FROM users'
             db.query(sql, (err, response) => {
                 if (err !== null) {
@@ -41,13 +41,13 @@ module.exports = {
                 }
 
             })
-        } else {
-            resultFaled(res)
-        }
+        // } else {
+        //     resultFaled(res)
+        // }
 
     },
     detail: (req, res) => {
-        if (Author(req)) {
+        // if (Author(req)) {
             let params = req.body;
             let sql = 'SELECT * FROM users WHERE ?'
             db.query(sql, [params], (err, response) => {
@@ -66,12 +66,12 @@ module.exports = {
                     })
                 }
             })
-        } else {
-            resultFaled(res)
-        }
+        // } else {
+        //     resultFaled(res)
+        // }
     },
     update: (req, res) => {
-        if (Author(req)) {
+        // if (Author(req)) {
             let id = req.body.id;
             let sql = 'UPDATE users SET ?  WHERE id = ?'
             db.query(sql, [req.body, id], (err, response) => {
@@ -90,12 +90,12 @@ module.exports = {
                     })
                 }
             })
-        } else {
-            resultFaled(res)
-        }
+        // } else {
+        //     resultFaled(res)
+        // }
     },
     insert: (req, res) => {
-        if (Author(req)) {
+        // if (Author(req)) {
             let data = [[req.body.name != null ? req.body.name : '', req.body.email != null ? req.body.email : '', req.body.password]];
             let sql = 'INSERT INTO users (name,email,password) VALUES  ?'
             db.query(sql, [data], (err, response) => {
@@ -114,12 +114,12 @@ module.exports = {
                 }
 
             })
-        } else {
-            resultFaled(res)
-        }
+        // } else {
+        //     resultFaled(res)
+        // }
     },
     delete: (req, res) => {
-        if (Author(req)) {
+        // if (Author(req)) {
             let sql = 'DELETE FROM users WHERE id=?'
             db.query(sql, [req.body.id], (err, response) => {
                 if (err !== null) {
@@ -134,8 +134,8 @@ module.exports = {
                     })
                 }
             })
-        } else {
-            resultFaled(res)
-        }
+        // } else {
+        //     resultFaled(res)
+        // }
     }
 }
