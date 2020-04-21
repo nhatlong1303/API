@@ -31,5 +31,9 @@ module.exports = function (app) {
     app.route('/category/delete').post(CategorysCtrl.delete);
     app.route('/category/insert').post(CategorysCtrl.insert);
 
+
+    let HomePage = require('../Controllers/HomePageController');
+    app.route('/slider').post(HomePage.slider);
+
    
 };
