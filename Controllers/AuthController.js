@@ -8,14 +8,11 @@ var LocalStorage = require('node-localstorage').LocalStorage,
     localStorage = new LocalStorage('./scratch');
 module.exports = {
     signUp: (req, res) => {
-        var name = req.body.name;
-        var password = req.body.password;
-        // var dec_pass = atob(password);
-        // var encrypted_pass = cryptr.encrypt(dec_pass);
-        let data = [[name, password]];
-
-        let sql = 'INSERT INTO user (name,password) VALUES  ?'
+        console.log(req.body.name)
+        let data = [[req.body.name, req.body.password, req.body.phone, req.body.email, req.body.birthday, req.body.sex, req.body.created_at]];
+        let sql = 'INSERT INTO users (name,password,phone,email,birthday,sex,created_at) VALUES  ?'
         db.query(sql, [data], (err, response) => {
+
             if (err !== null) {
                 res.json({
                     err
@@ -75,7 +72,7 @@ module.exports = {
                                 message: 'signIn success!',
                                 code: 200,
                                 data: {
-                                    user:response[0]
+                                    user: response[0]
                                 },
                                 // token:token
                                 token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1ODUyODI1NTYsImp3dGlkIjoiZXJ5NzVtIiwiYXVkaWVuY2UiOiJURVNUIiwiZGF0YSI6Ilt7XCJpZFwiOjIyLFwibmFtZVwiOlwiYWRtaW5cIixcImVtYWlsXCI6XCJcIixcInBhc3N3b3JkXCI6XCIxMjNcIixcInJlbWVtYmVyX3Rva2VuXCI6bnVsbCxcImNyZWF0ZWRfYXRcIjpudWxsLFwidXBkYXRlZF9hdFwiOm51bGx9XSIsImV4cCI6MTU4NTI4NjE1Nn0.AoQDzIvL-SB7mcEio-SrNjObMRMWZXg4sZJnS-dF0LE',
