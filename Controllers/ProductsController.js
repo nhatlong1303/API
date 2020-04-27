@@ -50,7 +50,8 @@ module.exports = {
         // if (Author(req)) {
         let sql = '';
         let params = '';
-        if (req.body.Level3 !== undefined) {
+        if (req.body.Level3 !== undefined ) {
+            console.log('1')
             sql = 'SELECT * FROM category INNER JOIN products on products.Level3=category.id WHERE  category.id=? ';
             params = req.body.Level3
         } else if (req.body.Level2 !== undefined) {
@@ -59,7 +60,7 @@ module.exports = {
             console.log('2')
             db.query(sql, [params], (err, response) => {
                 if (Object.keys(response).length <= 0) {
-                    console.log('2')
+                    console.log('3')
                     sql = 'SELECT * FROM category INNER JOIN products on products.Level2=category.id WHERE  category.id=? ';
                     db.query(sql, [params], (err, response) => {
                         if (err !== null) {
