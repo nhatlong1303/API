@@ -23,6 +23,8 @@ module.exports = function (app) {
     app.route('/products/insert').post(ProductsCtrl.insert);
     app.route('/products/rating').post(ProductsCtrl.rating);
     app.route('/products/totalRate').post(ProductsCtrl.TotalRate);
+    app.route('/products/ratingCMT').post(ProductsCtrl.ratingCMT);
+    app.route('/products/productsflcate').post(ProductsCtrl.ProductsflCate);
 
     let CategorysCtrl = require('../Controllers/CategoryController');
     app.route('/category').post(CategorysCtrl.LV0);

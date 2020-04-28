@@ -50,7 +50,7 @@ module.exports = {
         // if (Author(req)) {
         let sql = '';
         let params = '';
-        if (req.body.Level3 !== undefined ) {
+        if (req.body.Level3 !== undefined) {
             console.log('1')
             sql = 'SELECT * FROM category INNER JOIN products on products.Level3=category.id WHERE  category.id=? ';
             params = req.body.Level3
@@ -104,6 +104,83 @@ module.exports = {
             params = req.body.Level1
         }
         db.query(sql, [params, params], (err, response) => {
+            if (err !== null) {
+                res.json({
+                    message: err.sqlMessage
+                })
+            } else {
+                res.json({
+                    success: true,
+                    message: 'Access success!',
+                    code: 200,
+                    data: {
+                        products: response,
+                        total: Object.keys(response).length
+                    }
+                })
+            }
+        })
+        // } else {
+        //     resultFaled(res)
+        // }
+    },
+    ProductsflCate: (req, res) => {
+        // if (Author(req)) {
+        let sql = '';
+        let params = '';
+        let productID = req.body.productID;
+        if (req.body.Level3 !== undefined) {
+            sql = 'SELECT * FROM category INNER JOIN products on products.Level3=category.id WHERE  category.id=? and products.id !=? ';
+            params = req.body.Level3
+            console.log(params)
+        } else if (req.body.Level2 !== undefined) {
+            sql = 'SELECT * FROM category INNER JOIN products on products.Level3=category.id WHERE  category.categoryParent=? and products.id !=? ';
+            params = req.body.Level2, req.body.productID;
+            db.query(sql, [params], (err, response) => {
+                if (Object.keys(response).length <= 0) {
+                    sql = 'SELECT * FROM category INNER JOIN products on products.Level2=category.id WHERE  category.id=? and products.id !=? ';
+                    db.query(sql, [params], (err, response) => {
+                        if (err !== null) {
+                            res.json({
+                                message: err.sqlMessage
+                            })
+                        } else {
+                            res.json({
+                                success: true,
+                                message: 'Access success!',
+                                code: 200,
+                                data: {
+                                    products: response,
+                                    total: Object.keys(response).length
+                                }
+                            })
+                        }
+                    })
+                } else {
+                    if (err !== null) {
+                        res.json({
+                            message: err.sqlMessage
+                        })
+                    } else {
+                        res.json({
+                            success: true,
+                            message: 'Access success!',
+                            code: 200,
+                            data: {
+                                products: response,
+                                total: Object.keys(response).length
+                            }
+                        })
+                    }
+                }
+
+            })
+            return;
+        } else {
+            sql = 'SELECT * FROM category INNER JOIN products on  products.Level1=category.id or products.Level2=category.id or  products.Level3=category.id WHERE  category.categoryParent=? '
+            params = req.body.Level1
+        }
+        db.query(sql, [params,productID], (err, response) => {
             if (err !== null) {
                 res.json({
                     message: err.sqlMessage
@@ -191,9 +268,9 @@ module.exports = {
     },
     rating: (req, res) => {
         // if (Author(req)) {
-        let data = [[req.body.productID, req.body.userID, req.body.number, req.body.content, req.body.created_at]]
+        let data = [[req.body.productID, req.body.userID, req.body.userName, req.body.number, req.body.content, req.body.created_at]]
         let id = [[req.body.productID]]
-        let sql = 'INSERT INTO rating (productID,userID,number,content,created_at) VALUES  ?'
+        let sql = 'INSERT INTO rating (productID,userID,userName,number,content,created_at) VALUES  ?'
         db.query(sql, [data], (err, response) => {
             console.log(err)
             if (err !== null) {
@@ -257,4 +334,41 @@ module.exports = {
         //     resultFaled(res)
         // }
     },
+    ratingCMT: (req, res) => {
+        // if (Author(req)) {
+        let data = [[req.body.productID]]
+        let sql = 'SELECT * FROM rating WHERE productID=?'
+        db.query(sql, [data], (err, response) => {
+            console.log(err)
+            let sql = 'SELECT COUNT(IF(number = "5", 1, NULL)) "five",COUNT(IF(number = "4", 1, NULL)) "four",COUNT(IF(number = "3", 1, NULL)) "three",COUNT(IF(number = "2", 1, NULL)) "two",COUNT(IF(number = "1", 1, NULL)) "one",';
+            sql += ' SUM(CASE WHEN number = "5" THEN number END) / COUNT(IF(number = "5", 1, NULL)) "total5",'
+            sql += ' SUM(CASE WHEN number = "4" THEN number END) / COUNT(IF(number = "4", 1, NULL)) "total4",'
+            sql += ' SUM(CASE WHEN number = "3" THEN number END) / COUNT(IF(number = "3", 1, NULL)) "total3",'
+            sql += ' SUM(CASE WHEN number = "2" THEN number END) / COUNT(IF(number = "2", 1, NULL)) "total2",'
+            sql += ' SUM(CASE WHEN number = "1" THEN number END) / COUNT(IF(number = "1", 1, NULL)) "total1"'
+            sql += ' FROM rating WHERE productID=?'
+            db.query(sql, [data], (err, response2) => {
+                console.log(err)
+                if (err !== null) {
+                    res.json({
+                        err
+                    })
+                } else {
+                    res.json({
+                        success: true,
+                        message: 'Access success!',
+                        code: 200,
+                        data: {
+                            rates: response,
+                            count: response2[0]
+                        }
+                    })
+                }
+            })
+        })
+        // } else {
+        //     resultFaled(res)
+        // }
+    },
+
 }
