@@ -37,5 +37,7 @@ module.exports = function (app) {
     let HomePage = require('../Controllers/HomePageController');
     app.route('/slider').post(HomePage.slider);
 
-   
+    let PayPage = require('../Controllers/PayController');
+    app.route('/addressUser').post(PayPage.addressUser);
+
 };
