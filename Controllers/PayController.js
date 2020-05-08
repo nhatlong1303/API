@@ -40,4 +40,21 @@ module.exports = {
             }
         })
     },
+    newAddress: (req, res) => {
+        let data = [[req.body.userID, req.body.name, req.body.phone, req.body.address, req.body.province, req.body.district, req.body.ward, req.body.isDefauld]]
+        let sql = 'INSERT INTO addressuser (userID,name,phone,address,province,district,ward,isDefauld) VALUES ?'
+        db.query(sql, [data], (err, response) => {
+            if (err !== null) {
+                res.json({
+                    err
+                })
+            } else {
+                res.json({
+                    success: true,
+                    message: 'success!',
+                    code: 200,
+                })
+            }
+        })
+    },
 }
