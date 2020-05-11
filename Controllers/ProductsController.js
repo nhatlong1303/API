@@ -180,7 +180,7 @@ module.exports = {
             sql = 'SELECT * FROM category INNER JOIN products on  products.Level1=category.id or products.Level2=category.id or  products.Level3=category.id WHERE  category.categoryParent=? '
             params = req.body.Level1
         }
-        db.query(sql, [params,productID], (err, response) => {
+        db.query(sql, [params, productID], (err, response) => {
             if (err !== null) {
                 res.json({
                     message: err.sqlMessage
@@ -365,6 +365,71 @@ module.exports = {
                     })
                 }
             })
+        })
+        // } else {
+        //     resultFaled(res)
+        // }
+    },
+
+    getSeen: (req, res) => {
+        // if (Author(req)) {
+        let sql = 'SELECT * FROM seen_products WHERE userID=? order by id desc '
+        db.query(sql, [req.body.userID], (err, response) => {
+            if (err !== null) {
+                res.json({
+                    err
+                })
+            } else {
+                res.json({
+                    success: true,
+                    message: 'insert success!',
+                    code: 200,
+                    data: {
+                        data: response
+                    }
+                })
+            }
+        })
+        // } else {
+        //     resultFaled(res)
+        // }
+    },
+    seenProducts: (req, res) => {
+        // if (Author(req)) {
+        let data = [[req.body.userID, req.body.productID, req.body.image, req.body.price, req.body.discount]]
+        let sql = 'INSERT INTO seen_products (userID,productID,image,price,discount) VALUES  ?'
+        db.query(sql, [data], (err, response) => {
+            if (err !== null) {
+                res.json({
+                    err
+                })
+            } else {
+                res.json({
+                    success: true,
+                    message: 'insert success!',
+                    code: 200,
+                })
+            }
+        })
+        // } else {
+        //     resultFaled(res)
+        // }
+    },
+    removeSeen: (req, res) => {
+        // if (Author(req)) {
+        let sql = 'DELETE FROM seen_products WHERE productID=?'
+        db.query(sql, [req.body.productID], (err, response) => {
+            if (err !== null) {
+                res.json({
+                    err
+                })
+            } else {
+                res.json({
+                    success: true,
+                    message: 'deleted success!',
+                    code: 200,
+                })
+            }
         })
         // } else {
         //     resultFaled(res)
