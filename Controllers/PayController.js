@@ -69,8 +69,8 @@ module.exports = {
         })
     },
     addNewOrder: (req, res) => {
-        let data = [[req.body.userID, req.body.addressID, req.body.total, req.body.deliveryID, req.body.status, req.body.title]]
-        let sql = 'INSERT INTO new_order (userID,addressID,total,deliveryID,status,title) VALUES ?'
+        let data = [[req.body.userID, req.body.addressID, req.body.price_temp, req.body.total, req.body.deliveryID, req.body.status, req.body.title]]
+        let sql = 'INSERT INTO new_order (userID,addressID,price_temp,total,deliveryID,status,title) VALUES ?'
         db.query(sql, [data], (err, response) => {
             if (err !== null) {
                 res.json({
@@ -96,9 +96,10 @@ module.exports = {
         })
     },
     addNewOrderDetail: (req, res) => {
-        let data = [[req.body.orderID, req.body.productID, req.body.quantity, req.body.price, req.body.discount]]
-        let sql = 'INSERT INTO orderdetail (orderID,productID,quantity,price,discount) VALUES ?'
+        let data = [[req.body.orderID, req.body.productID, req.body.productName, req.body.image, req.body.quantity, req.body.price, req.body.discount]]
+        let sql = 'INSERT INTO orderdetail (orderID,productID,productName,image,quantity,price,discount) VALUES ?'
         db.query(sql, [data], (err, response) => {
+            console.log(err)
             if (err !== null) {
                 res.json({
                     err

@@ -37,6 +37,10 @@ module.exports = function (app) {
     let HomePage = require('../Controllers/HomePageController');
     app.route('/slider').post(HomePage.slider);
     app.route('/listOrder').post(HomePage.listOrder);
+    app.route('/getItemAddressUser').post(HomePage.getItemAddressUser);
+    app.route('/getProductsOrder').post(HomePage.getProductsOrder);
+    app.route('/getPurchased').post(HomePage.getPurchased);
+    app.route('/orderStatus').post(HomePage.orderStatus);
 
     let PayPage = require('../Controllers/PayController');
     app.route('/addressUser').post(PayPage.addressUser);
