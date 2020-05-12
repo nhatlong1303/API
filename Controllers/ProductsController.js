@@ -396,29 +396,39 @@ module.exports = {
     },
     seenProducts: (req, res) => {
         // if (Author(req)) {
-        let data = [[req.body.userID, req.body.productID, req.body.image, req.body.price, req.body.discount]]
-        let sql = 'INSERT INTO seen_products (userID,productID,image,price,discount) VALUES  ?'
-        db.query(sql, [data], (err, response) => {
+        let sql = 'DELETE FROM seen_products WHERE productID=?'
+        db.query(sql, [req.body.productID], (err, response) => {
             if (err !== null) {
                 res.json({
                     err
                 })
             } else {
-                res.json({
-                    success: true,
-                    message: 'insert success!',
-                    code: 200,
+                let data = [[req.body.userID, req.body.productID, req.body.productName, req.body.image, req.body.price, req.body.discount]]
+                let sql = 'INSERT INTO seen_products (userID,productID,productName,image,price,discount) VALUES  ?'
+                db.query(sql, [data], (err, response) => {
+                    if (err !== null) {
+                        res.json({
+                            err
+                        })
+                    } else {
+                        res.json({
+                            success: true,
+                            message: 'insert success!',
+                            code: 200,
+                        })
+                    }
                 })
             }
         })
+
         // } else {
         //     resultFaled(res)
         // }
     },
-    removeSeen: (req, res) => {
+    getProductDetail: (req, res) => {
         // if (Author(req)) {
-        let sql = 'DELETE FROM seen_products WHERE productID=?'
-        db.query(sql, [req.body.productID], (err, response) => {
+        let sql = 'SELECT * FROM products WHERE id=?'
+        db.query(sql, [req.body.id], (err, response) => {
             if (err !== null) {
                 res.json({
                     err
@@ -428,6 +438,9 @@ module.exports = {
                     success: true,
                     message: 'deleted success!',
                     code: 200,
+                    data: {
+                        product: response[0]
+                    }
                 })
             }
         })

@@ -27,7 +27,7 @@ module.exports = function (app) {
     app.route('/products/productsflcate').post(ProductsCtrl.ProductsflCate);
     app.route('/products/getSeen').post(ProductsCtrl.getSeen);
     app.route('/products/seenProducts').post(ProductsCtrl.seenProducts);
-    app.route('/products/removeSeen').post(ProductsCtrl.removeSeen);
+    app.route('/products/getProductDetail').post(ProductsCtrl.getProductDetail);
 
     let CategorysCtrl = require('../Controllers/CategoryController');
     app.route('/category').post(CategorysCtrl.LV0);
