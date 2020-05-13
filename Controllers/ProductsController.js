@@ -268,9 +268,9 @@ module.exports = {
     },
     rating: (req, res) => {
         // if (Author(req)) {
-        let data = [[req.body.productID, req.body.userID, req.body.userName, req.body.number, req.body.content, req.body.created_at]]
+        let data = [[req.body.productID, req.body.userID, req.body.userName, req.body.number, req.body.content]]
         let id = [[req.body.productID]]
-        let sql = 'INSERT INTO rating (productID,userID,userName,number,content,created_at) VALUES  ?'
+        let sql = 'INSERT INTO rating (productID,userID,userName,number,content) VALUES  ?'
         db.query(sql, [data], (err, response) => {
             console.log(err)
             if (err !== null) {
@@ -296,10 +296,20 @@ module.exports = {
                                     err
                                 })
                             } else {
-                                res.json({
-                                    success: true,
-                                    message: 'rating success!',
-                                    code: 200,
+                                let sql = 'UPDATE orderdetail SET is_rate=1 ,numberRating=? WHERE productID=?'
+                                db.query(sql, [req.body.number, id], (err, response) => {
+                                    console.log(err)
+                                    if (err !== null) {
+                                        res.json({
+                                            err
+                                        })
+                                    } else {
+                                        res.json({
+                                            success: true,
+                                            message: 'rating success!',
+                                            code: 200,
+                                        })
+                                    }
                                 })
                             }
                         })
@@ -444,6 +454,32 @@ module.exports = {
                 })
             }
         })
+        // } else {
+        //     resultFaled(res)
+        // }
+    },
+    getRateProducts: (req, res) => {
+        // if (Author(req)) {
+        let sql = 'select orderdetail.*,rating.content from orderdetail INNER JOIN new_order on orderdetail.orderID=new_order.id INNER JOIN users on users.id=new_order.userID '
+        sql += 'INNER JOIN rating on rating.productID=orderdetail.productID WHERE new_order.status=1 AND new_order.userID=? AND orderdetail.is_rate=? group by rating.content'
+        db.query(sql, [req.body.userID, req.body.is_rate], (err, response) => {
+            if (err !== null) {
+                res.json({
+                    err
+                })
+            } else {
+                res.json({
+                    success: true,
+                    message: 'success!',
+                    code: 200,
+                    data: {
+                        products: response,
+                        total: Object.keys(response).length
+                    }
+                })
+            }
+        })
+
         // } else {
         //     resultFaled(res)
         // }
