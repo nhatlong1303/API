@@ -296,8 +296,8 @@ module.exports = {
                                     err
                                 })
                             } else {
-                                let sql = 'UPDATE orderdetail SET is_rate=1 ,numberRating=? WHERE productID=?'
-                                db.query(sql, [req.body.number, id], (err, response) => {
+                                let sql = 'UPDATE orderdetail SET is_rate=1 ,numberRating=? WHERE productID=? AND orderID=?'
+                                db.query(sql, [req.body.number, id, req.body.orderID], (err, response) => {
                                     console.log(err)
                                     if (err !== null) {
                                         res.json({
@@ -461,7 +461,7 @@ module.exports = {
     getRateProducts: (req, res) => {
         // if (Author(req)) {
         let sql = 'select orderdetail.*,rating.content from orderdetail INNER JOIN new_order on orderdetail.orderID=new_order.id INNER JOIN users on users.id=new_order.userID '
-        sql += 'INNER JOIN rating on rating.productID=orderdetail.productID WHERE new_order.status=1 AND new_order.userID=? AND orderdetail.is_rate=? group by rating.content'
+        sql += 'INNER JOIN rating on rating.productID=orderdetail.productID WHERE new_order.status=1 AND new_order.userID=? AND orderdetail.is_rate=? group by orderdetail.id'
         db.query(sql, [req.body.userID, req.body.is_rate], (err, response) => {
             if (err !== null) {
                 res.json({
