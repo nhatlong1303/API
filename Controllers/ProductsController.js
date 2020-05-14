@@ -30,13 +30,25 @@ module.exports = {
                     err
                 })
             } else {
-                res.json({
-                    success: true,
-                    message: 'Access success!',
-                    code: 200,
-                    data: {
-                        products: response
+                let page = req.body.limit * (req.body.page - 1)
+                let sql = 'SELECT * FROM products LIMIT ? OFFSET ?'
+                db.query(sql, [req.body.limit, req.body.skip], (err1, response1) => {
+                    if (err1 !== null) {
+                        res.json({
+                            err1
+                        })
+                    } else {
+                        res.json({
+                            success: true,
+                            message: 'Access success!',
+                            code: 200,
+                            data: {
+                                total: Object.keys(response).length,
+                                products: response1
+                            }
+                        })
                     }
+
                 })
             }
 
@@ -150,8 +162,8 @@ module.exports = {
                                 message: 'Access success!',
                                 code: 200,
                                 data: {
+                                    total: Object.keys(response).length,
                                     products: response,
-                                    total: Object.keys(response).length
                                 }
                             })
                         }
@@ -167,8 +179,8 @@ module.exports = {
                             message: 'Access success!',
                             code: 200,
                             data: {
-                                products: response,
-                                total: Object.keys(response).length
+                                total: Object.keys(response).length,
+                                products: response
                             }
                         })
                     }
@@ -177,10 +189,10 @@ module.exports = {
             })
             return;
         } else {
-            sql = 'SELECT * FROM category INNER JOIN products on  products.Level1=category.id or products.Level2=category.id or  products.Level3=category.id WHERE  category.categoryParent=? '
+            sql = 'SELECT * FROM category INNER JOIN products on  products.Level1=category.id or products.Level2=category.id or  products.Level3=category.id WHERE  category.categoryParent=? LIMIT ? OFFSET ? '
             params = req.body.Level1
         }
-        db.query(sql, [params, productID], (err, response) => {
+        db.query(sql, [params, productID, limit, skip], (err, response) => {
             if (err !== null) {
                 res.json({
                     message: err.sqlMessage
@@ -191,8 +203,8 @@ module.exports = {
                     message: 'Access success!',
                     code: 200,
                     data: {
+                        total: Object.keys(response).length,
                         products: response,
-                        total: Object.keys(response).length
                     }
                 })
             }
@@ -460,8 +472,16 @@ module.exports = {
     },
     getRateProducts: (req, res) => {
         // if (Author(req)) {
-        let sql = 'select orderdetail.*,rating.content from orderdetail INNER JOIN new_order on orderdetail.orderID=new_order.id INNER JOIN users on users.id=new_order.userID '
-        sql += 'INNER JOIN rating on rating.productID=orderdetail.productID WHERE new_order.status=1 AND new_order.userID=? AND orderdetail.is_rate=? group by orderdetail.id'
+        let sql = '';
+        if (Number(req.body.is_rate) === 0) {
+            console.log('1')
+            sql = 'select orderdetail.* from orderdetail INNER JOIN new_order on orderdetail.orderID=new_order.id INNER JOIN users on users.id=new_order.userID '
+            sql += 'WHERE new_order.status=1 AND new_order.userID=? AND orderdetail.is_rate=?'
+        } else {
+            console.log('2')
+            sql = 'select orderdetail.*,rating.content from orderdetail INNER JOIN new_order on orderdetail.orderID=new_order.id INNER JOIN users on users.id=new_order.userID '
+            sql += 'INNER JOIN rating on rating.productID=orderdetail.productID WHERE new_order.status=1 AND new_order.userID=? AND orderdetail.is_rate=? group by orderdetail.id'
+        }
         db.query(sql, [req.body.userID, req.body.is_rate], (err, response) => {
             if (err !== null) {
                 res.json({
