@@ -189,10 +189,10 @@ module.exports = {
             })
             return;
         } else {
-            sql = 'SELECT * FROM category INNER JOIN products on  products.Level1=category.id or products.Level2=category.id or  products.Level3=category.id WHERE  category.categoryParent=? LIMIT ? OFFSET ? '
+            sql = 'SELECT * FROM category INNER JOIN products on  products.Level1=category.id or products.Level2=category.id or  products.Level3=category.id WHERE  category.categoryParent=? '
             params = req.body.Level1
         }
-        db.query(sql, [params, productID, limit, skip], (err, response) => {
+        db.query(sql, [params, productID], (err, response) => {
             if (err !== null) {
                 res.json({
                     message: err.sqlMessage
@@ -449,8 +449,9 @@ module.exports = {
     },
     getProductDetail: (req, res) => {
         // if (Author(req)) {
-        let sql = 'SELECT * FROM products WHERE id=?'
+        let sql = 'SELECT * FROM products WHERE id=? '
         db.query(sql, [req.body.id], (err, response) => {
+            console.log(err)
             if (err !== null) {
                 res.json({
                     err
@@ -458,7 +459,7 @@ module.exports = {
             } else {
                 res.json({
                     success: true,
-                    message: 'deleted success!',
+                    message: 'success!',
                     code: 200,
                     data: {
                         product: response[0]
