@@ -333,6 +333,39 @@ module.exports = {
         //     resultFaled(res)
         // }
     },
+
+    attachment: (req, res) => {
+        // if (Author(req)) {
+        let data = [[req.body.ratingID, req.body.Image,]]
+        let sql = 'SELECT id  FROM rating ORDER BY id DESC LIMIT 1 '
+        db.query(sql, (err, response) => {
+            console.log(err)
+            if (err !== null) {
+                res.json({
+                    err
+                })
+            } else {
+                let sql = 'INSERT INTO attachment (ratingID,Image) VALUES ?'
+                db.query(sql, [data], (err, response) => {
+                    console.log(err)
+                    if (err !== null) {
+                        res.json({
+                            err
+                        })
+                    } else {
+                        res.json({
+                            success: true,
+                            message: 'insert success!',
+                            code: 200,
+                        })
+                    }
+                })
+            }
+        })
+        // } else {
+        //     resultFaled(res)
+        // }
+    },
     TotalRate: (req, res) => {
         // if (Author(req)) {
         let data = [[req.body.productID]]
@@ -481,7 +514,7 @@ module.exports = {
         } else {
             console.log('2')
             sql = 'select orderdetail.*,rating.content,rating.number from orderdetail INNER JOIN new_order on orderdetail.orderID=new_order.id INNER JOIN users on users.id=new_order.userID '
-            sql += 'INNER JOIN rating on rating.productID=orderdetail.productID WHERE new_order.status=1 AND new_order.userID=? AND orderdetail.is_rate=? group by rating.STT '
+            sql += 'INNER JOIN rating on rating.productID=orderdetail.productID WHERE new_order.status=1 AND new_order.userID=? AND orderdetail.is_rate=? group by rating.id '
         }
         db.query(sql, [req.body.userID, req.body.is_rate], (err, response) => {
             if (err !== null) {
