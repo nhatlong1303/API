@@ -280,9 +280,9 @@ module.exports = {
     },
     rating: (req, res) => {
         // if (Author(req)) {
-        let data = [[req.body.productID, req.body.userID, req.body.userName, req.body.number, req.body.title, req.body.content]]
+        let data = [[req.body.productID, req.body.userID, req.body.order_detail_ID, req.body.userName, req.body.number, req.body.title, req.body.content]]
         let id = [[req.body.productID]]
-        let sql = 'INSERT INTO rating (productID,userID,userName,number,title,content) VALUES  ?'
+        let sql = 'INSERT INTO rating (productID,userID,order_detail_ID,userName,number,title,content) VALUES  ?'
         db.query(sql, [data], (err, response) => {
             console.log(err)
             if (err !== null) {
@@ -351,6 +351,7 @@ module.exports = {
     attachment: (req, res) => {
         // if (Author(req)) {
         let data = [[req.body.ratingID, req.body.Image]]
+        console.log(data)
         let sql = 'INSERT INTO attachment (ratingID,Image) VALUES ?'
         db.query(sql, [data], (err, response) => {
             console.log(err)
@@ -543,7 +544,7 @@ module.exports = {
         } else {
             console.log('2')
             sql = 'select orderdetail.*,rating.content,rating.number from orderdetail INNER JOIN new_order on orderdetail.orderID=new_order.id INNER JOIN users on users.id=new_order.userID '
-            sql += 'INNER JOIN rating on rating.productID=orderdetail.productID WHERE new_order.status=1 AND new_order.userID=? AND orderdetail.is_rate=? group by rating.id '
+            sql += 'INNER JOIN rating on rating.order_detail_ID=orderdetail.id WHERE new_order.status=1 AND new_order.userID=? AND orderdetail.is_rate=?'
         }
         db.query(sql, [req.body.userID, req.body.is_rate], (err, response) => {
             if (err !== null) {
