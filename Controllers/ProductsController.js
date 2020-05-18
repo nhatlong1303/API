@@ -316,11 +316,25 @@ module.exports = {
                                             err
                                         })
                                     } else {
-                                        res.json({
-                                            success: true,
-                                            message: 'rating success!',
-                                            code: 200,
+                                        let sql = 'SELECT id  FROM rating ORDER BY id DESC LIMIT 1 '
+                                        db.query(sql, (err, response) => {
+                                            console.log(err)
+                                            if (err !== null) {
+                                                res.json({
+                                                    err
+                                                })
+                                            } else {
+                                                res.json({
+                                                    success: true,
+                                                    message: 'rating success!',
+                                                    code: 200,
+                                                    data: {
+                                                        rating: response[0]
+                                                    }
+                                                })
+                                            }
                                         })
+
                                     }
                                 })
                             }
@@ -336,8 +350,30 @@ module.exports = {
 
     attachment: (req, res) => {
         // if (Author(req)) {
-        let data = [[req.body.ratingID, req.body.Image,]]
-        let sql = 'SELECT id  FROM rating ORDER BY id DESC LIMIT 1 '
+        let data = [[req.body.ratingID, req.body.Image]]
+        let sql = 'INSERT INTO attachment (ratingID,Image) VALUES ?'
+        db.query(sql, [data], (err, response) => {
+            console.log(err)
+            if (err !== null) {
+                res.json({
+                    err
+                })
+            } else {
+                res.json({
+                    success: true,
+                    message: 'insert success!',
+                    code: 200,
+                })
+            }
+        })
+
+        // } else {
+        //     resultFaled(res)
+        // }
+    },
+    getAttachment: (req, res) => {
+        // if (Author(req)) {
+        let sql = 'SELECT *  FROM attachment '
         db.query(sql, (err, response) => {
             console.log(err)
             if (err !== null) {
@@ -345,19 +381,12 @@ module.exports = {
                     err
                 })
             } else {
-                let sql = 'INSERT INTO attachment (ratingID,Image) VALUES ?'
-                db.query(sql, [data], (err, response) => {
-                    console.log(err)
-                    if (err !== null) {
-                        res.json({
-                            err
-                        })
-                    } else {
-                        res.json({
-                            success: true,
-                            message: 'insert success!',
-                            code: 200,
-                        })
+                res.json({
+                    success: true,
+                    message: 'success!',
+                    code: 200,
+                    data: {
+                        attachments: response
                     }
                 })
             }
