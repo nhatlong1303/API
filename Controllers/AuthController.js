@@ -8,7 +8,7 @@ var LocalStorage = require('node-localstorage').LocalStorage,
     localStorage = new LocalStorage('./scratch');
 module.exports = {
     signUp: (req, res) => {
-        console.log(req.body.name)
+        
         let data = [[req.body.name, req.body.password, req.body.phone, req.body.email, req.body.birthday, req.body.sex, req.body.created_at]];
         let sql = 'INSERT INTO users (name,password,phone,email,birthday,sex,created_at) VALUES  ?'
         db.query(sql, [data], (err, response) => {
@@ -27,12 +27,12 @@ module.exports = {
         })
     },
     signIn: (req, res) => {
-        var name = req.body.name;
+        var phone = req.body.phone;
         var password = req.body.password;
         // var dec_pass =atob(password);
         // var encrypted_pass = cryptr.decrypt(dec_pass);
-        let sql = 'SELECT * FROM users WHERE  name=? AND password=?'
-        db.query(sql, [[name], [password]], (err, response) => {
+        let sql = 'SELECT * FROM users WHERE  phone=? or email=? AND password=?'
+        db.query(sql, [phone, phone, password], (err, response) => {
             if (response == "") {
                 res.json({
                     success: false,
