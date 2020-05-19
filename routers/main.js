@@ -31,6 +31,7 @@ module.exports = function (app) {
     app.route('/products/getRateProducts').post(ProductsCtrl.getRateProducts);
     app.route('/products/attachment').post(ProductsCtrl.attachment);
     app.route('/products/getAttachment').post(ProductsCtrl.getAttachment);
+    app.route('/products/flashSale').post(ProductsCtrl.flashSale);
 
     let CategorysCtrl = require('../Controllers/CategoryController');
     app.route('/category').post(CategorysCtrl.LV0);

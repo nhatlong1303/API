@@ -568,5 +568,29 @@ module.exports = {
         //     resultFaled(res)
         // }
     },
+    flashSale: (req, res) => {
+        // if (Author(req)) {
+        let sql = 'SELECT * FROM products ORDER BY RAND() LIMIT 10 '
+        db.query(sql, (err, response) => {
+            console.log(err)
+            if (err !== null) {
+                res.json({
+                    err
+                })
+            } else {
+                res.json({
+                    success: true,
+                    message: 'success!',
+                    code: 200,
+                    data: {
+                        products: response
+                    }
+                })
+            }
+        })
+        // } else {
+        //     resultFaled(res)
+        // }
+    },
 
 }

@@ -96,7 +96,7 @@ module.exports = {
         })
     },
     addNewOrderDetail: (req, res) => {
-        let data = [[req.body.orderID, req.body.productID, req.body.productName, req.body.image, req.body.quantity, req.body.price, req.body.discount,0]]
+        let data = [[req.body.orderID, req.body.productID, req.body.productName, req.body.image, req.body.quantity, req.body.price, req.body.discount, 0]]
         let sql = 'INSERT INTO orderdetail (orderID,productID,productName,image,quantity,price,discount,is_rate) VALUES ?'
         db.query(sql, [data], (err, response) => {
             console.log(err)
@@ -106,8 +106,10 @@ module.exports = {
                 })
             } else {
                 let quantity = [[req.body.quantity_product - req.body.quantity]]
-                let sql = 'UPDATE products SET quantity=?  WHERE id = ?'
-                db.query(sql, [quantity, [[req.body.productID]]], (err, response) => {
+                let sold = req.body.sold + req.body.quantity
+                let sql = 'UPDATE products SET quantity=?, sold=?  WHERE id = ? '
+                db.query(sql, [quantity, sold, [[req.body.productID]]], (err, response) => {
+                    console.log(err)
                     if (err !== null) {
                         res.json({
                             err
