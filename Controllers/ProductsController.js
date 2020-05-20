@@ -465,12 +465,22 @@ module.exports = {
                     err
                 })
             } else {
-                res.json({
-                    success: true,
-                    message: 'insert success!',
-                    code: 200,
-                    data: {
-                        data: response
+                let sql = 'SELECT * FROM seen_products WHERE userID=? order by id desc LIMIT ? OFFSET ? '
+                db.query(sql, [req.body.userID, Number(req.body.limit), Number(req.body.skip)], (err, response1) => {
+                    if (err !== null) {
+                        res.json({
+                            err
+                        })
+                    } else {
+                        res.json({
+                            success: true,
+                            message: 'success!',
+                            code: 200,
+                            data: {
+                                total: Object.keys(response).length,
+                                products: response1
+                            }
+                        })
                     }
                 })
             }

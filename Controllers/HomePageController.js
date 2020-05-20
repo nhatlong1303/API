@@ -54,13 +54,24 @@ module.exports = {
                     err
                 })
             } else {
-                res.json({
-                    success: true,
-                    message: 'Access success!',
-                    code: 200,
-                    data: {
-                        orders: response
+                let sql = 'SELECT * FROM new_order WHERE userID=? LIMIT ?  OFFSET ?'
+                db.query(sql, [req.body.userID, Number(req.body.limit), Number(req.body.skip)], (err, response1) => {
+                    if (err !== null) {
+                        res.json({
+                            err
+                        })
+                    } else {
+                        res.json({
+                            success: true,
+                            message: 'Access success!',
+                            code: 200,
+                            data: {
+                                total: Object.keys(response).length,
+                                orders: response1
+                            }
+                        })
                     }
+
                 })
             }
 
@@ -123,18 +134,28 @@ module.exports = {
     getPurchased: (req, res) => {
         // if (Author(req)) {
         let sql = 'SELECT orderdetail.*,new_order.created_at as dateBuy from new_order INNER JOIN orderdetail on new_order.id=orderdetail.orderID WHERE new_order.status=? AND new_order.userID=?'
-        db.query(sql, [req.body.status,req.body.userID], (err, response) => {
+        db.query(sql, [req.body.status, req.body.userID], (err, response) => {
             if (err !== null) {
                 res.json({
                     err
                 })
             } else {
-                res.json({
-                    success: true,
-                    message: 'Access success!',
-                    code: 200,
-                    data: {
-                        products: response
+                let sql = 'SELECT orderdetail.*,new_order.created_at as dateBuy from new_order INNER JOIN orderdetail on new_order.id=orderdetail.orderID WHERE new_order.status=? AND new_order.userID=? LIMIT ? OFFSET ?'
+                db.query(sql, [req.body.status, req.body.userID, Number(req.body.limit), Number(req.body.skip)], (err, response1) => {
+                    if (err !== null) {
+                        res.json({
+                            err
+                        })
+                    } else {
+                        res.json({
+                            success: true,
+                            message: 'Access success!',
+                            code: 200,
+                            data: {
+                                total: Object.keys(response).length,
+                                products: response1
+                            }
+                        })
                     }
                 })
             }
@@ -147,19 +168,29 @@ module.exports = {
     orderStatus: (req, res) => {
         // if (Author(req)) {
         let sql = 'SELECT * FROM new_order WHERE status=? AND userID=?'
-        db.query(sql, [req.body.status,req.body.userID], (err, response) => {
+        db.query(sql, [req.body.status, req.body.userID], (err, response) => {
             if (err !== null) {
                 res.json({
                     err
                 })
             } else {
+                let sql = 'SELECT * FROM new_order WHERE status=? AND userID=? LIMIT ? OFFSET ? '
+                db.query(sql, [req.body.status, req.body.userID, Number(req.body.limit), Number(req.body.skip)], (err, response1) => {
+                    if (err !== null) {
+                        res.json({
+                            err
+                        })
+                    } else {
 
-                res.json({
-                    success: true,
-                    message: 'Access success!',
-                    code: 200,
-                    data: {
-                        orders: response
+                        res.json({
+                            success: true,
+                            message: 'Access success!',
+                            code: 200,
+                            data: {
+                                total: Object.keys(response).length,
+                                orders: response1
+                            }
+                        })
                     }
                 })
             }
